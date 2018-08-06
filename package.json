@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "xlsx": "^0.13.2",
+    "xlsx-populate": "^1.17.0"
+  }
+}
