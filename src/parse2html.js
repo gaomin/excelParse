@@ -103,7 +103,6 @@ function _createStyle(workbook, row, column) {
 
     let cell = workbook.row(row).cell(column);
     let styleStr = "";
-    
 
     let bold = cell.style('bold');
     let italic = cell.style('italic');
@@ -116,7 +115,6 @@ function _createStyle(workbook, row, column) {
     let fill = cell.style('fill');
     let border = cell.style('border');
     let borderStyle = cell.style('borderStyle');
-
 
     if (bold) {
         styleStr += "font-weight: bold;";
@@ -139,11 +137,23 @@ function _createStyle(workbook, row, column) {
     }
 
     if (fill && fill.color && fill.color.rgb && fill.color.rgb !== 'FFFFFF') {
-        styleStr += "background-color: #" + fill.color.rgb + ";";
+        if (fill.color.rgb.length > 6) {
+            styleStr += "background-color: #" + fill.color.rgb.slice(2) + ";";
+        } else {
+            styleStr += "background-color: #" + fill.color.rgb + ";";
+        }
+    }
+
+    if (fill && fill.color && fill.color.theme) {
+        styleStr += "background-color: #f00;";
     }
 
     if (fontColor && fontColor.rgb && fontColor.rgb !== '000000') {
-        styleStr += "color: #" + fontColor.rgb + ";";
+        if (fontColor.rgb.length > 6) {
+            styleStr += "color: #" + fontColor.rgb.slice(2) + ";";
+        } else {
+            styleStr += "color: #" + fontColor.rgb + ";";
+        }
     }
 
     if (fontSize) {
@@ -156,11 +166,17 @@ function _createStyle(workbook, row, column) {
     }
 
     if (border) {
+        
         Object.keys(border).forEach((item, index) => {
-            if (border[item] && border[item].color && border[item].color.rgb) {
-                styleStr += "border-" + item + ': ' + _getborderStyle(borderStyle[item]) + ' #' + border[item].color.rgb + ";";
+            if (border[item]) {
+                if (border[item].color && border[item].color.rgb) {
+                    styleStr += "border-" + item + ': ' + _getborderStyle(borderStyle[item]) + ' #' + border[item].color.rgb + ";";
+                }else {
+                    styleStr += "border-" + item + ': ' + _getborderStyle(borderStyle[item]) + ' #000' + ";";
+                }
             }
         })
+
     }
 
     styleStr += "height: 24px;"
